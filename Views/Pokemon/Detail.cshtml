@@ -1,0 +1,224 @@
+﻿@model PokedexMvc.Models.PokemonDetailViewModel
+
+@{
+    string formattedName = char.ToUpper(Model.Name[0]) + Model.Name.Substring(1).ToLower();
+    ViewData["Title"] = "Neo Pokedex | " + formattedName;
+}
+
+<style>
+    .detail-container {
+        margin-top: 50px;
+    }
+
+    .poke-big-img {
+        filter: drop-shadow(0 0 30px rgba(255, 203, 5, 0.4));
+        transition: 0.5s;
+    }
+
+        .poke-big-img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 50px rgba(255, 203, 5, 0.6));
+        }
+
+    .detail-panel {
+        background: rgba(20, 20, 20, 0.95);
+        border: 1px solid #333;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .data-box {
+        background: #0f0f0f;
+        border: 1px solid #333;
+        padding: 15px;
+        text-align: center;
+        border-radius: 8px;
+    }
+
+    .data-value {
+        display: block;
+        font-family: 'Rajdhani';
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .data-label {
+        font-size: 0.7rem;
+        color: #666;
+        letter-spacing: 2px;
+    }
+
+    .stat-row {
+        margin-bottom: 15px;
+    }
+
+    .progress-dark {
+        background: #111;
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .hp-fill {
+        background: #ff5959;
+    }
+
+    .atk-fill {
+        background: #f5ac78;
+    }
+
+    .def-fill {
+        background: #fae078;
+    }
+
+    .spd-fill {
+        background: #9db7f5;
+    }
+
+    .pop-fill {
+        background: linear-gradient(90deg, #ffcb05, #d4a017);
+    }
+
+    .type-badge {
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-family: 'Rajdhani';
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        margin-right: 10px;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    @@media (max-width: 992px) {
+        .detail-container
+
+    {
+        margin-top: 20px;
+    }
+
+    .left-col {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .poke-big-img {
+        width: 60% !important;
+        margin: 0 auto;
+    }
+
+    .detail-panel {
+        padding: 2rem !important;
+    }
+
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    }
+</style>
+
+<div class="container detail-container pb-5">
+    <div class="row align-items-center">
+
+        <div class="col-lg-5 col-12 left-col fade-in">
+            <div class="text-center">
+                <h1 class="display-4 fw-bold text-white mb-2" style="font-family: 'Rajdhani'; letter-spacing: 2px;">
+                    @Model.Name.ToUpper()
+                </h1>
+                <p class="text-white mb-4" style="font-family: 'Press Start 2P'; font-size: 0.8rem;">
+                    #@Model.Id.ToString().PadLeft(3, '0')
+                </p>
+
+                <div class="mb-4">
+                    @foreach (var type in Model.Types)
+                    {
+                        string color = "#555";
+                        if (type == "fire") color = "#fd7d24";
+                        else if (type == "water") color = "#4592c4";
+                        else if (type == "grass") color = "#9bcc50";
+                        else if (type == "electric") color = "#eed535";
+                        else if (type == "poison") color = "#b97fc9";
+                        else if (type == "psychic") color = "#f366b9";
+
+                        <span class="type-badge" style="background-color: @color; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+                            @type
+                        </span>
+                    }
+                </div>
+
+                <img src="@($"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{Model.Id}.png")"
+                     class="img-fluid poke-big-img"
+                     style="width: 80%;"
+                     alt="@Model.Name"
+                     loading="eager"
+                     fetchpriority="high">
+            </div>
+        </div>
+
+        <div class="col-lg-7 col-12 fade-in" style="animation-delay: 0.1s;">
+            <div class="detail-panel p-5 rounded-3 text-white h-100">
+
+                <h4 class="text-white border-bottom border-secondary pb-3 mb-4" style="font-family: 'Press Start 2P'; font-size: 0.8rem; letter-spacing: 1px; line-height: 1.5;">
+                    > ANALYSIS REPORT
+                </h4>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="data-box">
+                            <span class="data-value">@(Model.Height / 10.0) m</span>
+                            <span class="data-label">HEIGHT</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="data-box">
+                            <span class="data-value">@(Model.Weight / 10.0) kg</span>
+                            <span class="data-label">WEIGHT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    @foreach (var stat in new[] {
+                                        (Name: "HP", Val: Model.Hp, Class: "hp-fill"),
+                                        (Name: "ATTACK", Val: Model.Attack, Class: "atk-fill"),
+                                        (Name: "DEFENSE", Val: Model.Defense, Class: "def-fill"),
+                                        (Name: "SPEED", Val: Model.Speed, Class: "spd-fill")
+                                        })
+                    {
+                        int maxStat = 255;
+
+                        <div class="stat-row">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="stat-name" style="font-size: 0.9rem; font-weight: bold; color:#ddd;">@stat.Name</span>
+                                <span class="text-white fw-bold small">@stat.Val</span>
+                            </div>
+                            <div class="progress-dark">
+                                <div class="@stat.Class h-100" style="width: @(stat.Val * 100 / maxStat)%"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="p-3 rounded-2" style="background: rgba(255,255,255,0.05); border: 1px solid #333;">
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="text-light fw-bold" style="letter-spacing: 1px; font-size: 0.7rem;">BASE EXPERIENCE</small>
+                        <small class="text-white fw-bold">@Model.BaseExperience XP</small>
+                    </div>
+                    <div class="progress-dark" style="height: 4px;">
+                        <div class="pop-fill h-100" style="width: @(Math.Min(100, (Model.BaseExperience * 100 / 400)))%"></div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <a href="@Url.Action("Index", new { page = Model.ReturnPage, search = Model.ReturnSearch, type = Model.ReturnType, sort = Model.ReturnSort })"
+                       class="text-decoration-none text-white-50 hover-white"
+                       style="font-size: 0.8rem; letter-spacing: 2px;">
+                        [ BACK TO LIST ]
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

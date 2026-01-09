@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"]</title>
+    <meta name="description" content="@ViewData["Description"]">
+    <meta name="keywords" content="pokemon, pokedex, database, kanto, stats, analysis, @ViewData["Title"]">
+    <meta name="author" content="Umut Arda Ayhan">
+
+    <meta property="og:title" content="@ViewData["Title"]" />
+    <meta property="og:description" content="@ViewData["Description"]" />
+    <meta property="og:image" content="@ViewData["OgImage"]" />
+    <meta property="og:url" content="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path" />
+    <meta property="og:type" content="website" />
+    <meta name="google-site-verification" content="YRpfMWKTdvwxMOkT_9uc_yNRfwz8NlnuvLCGN1NFNMc" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .pokedex-theme {
+            background-color: #DC0A2D !important;
+            border-bottom: 4px solid #8B0000 !important;
+            box-shadow: 0 4px 15px rgba(220, 10, 45, 0.4);
+        }
+
+        .neo-navbar {
+            padding: 10px 0;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white !important;
+            text-shadow: 2px 2px 0px #8B0000;
+        }
+
+        .brand-text {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            line-height: 1;
+            margin-top: 4px;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #fff !important;
+                transform: translateY(-2px);
+                text-shadow: 0 0 5px rgba(255,255,255,0.8);
+            }
+
+        .neo-footer {
+            border-top: 4px solid #8B0000;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: auto;
+            color: white;
+        }
+
+        .footer-text {
+            font-family: 'Rajdhani';
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .footer-link {
+            color: #fff;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+            .footer-link:hover {
+                color: #ffcb05;
+            }
+
+        .main-content {
+            min-height: 80vh;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark neo-navbar pokedex-theme">
+            <div class="container">
+
+                <a class="navbar-brand" asp-area="" asp-controller="Pokemon" asp-action="Index">
+                    <img src="~/images/logo.webp" alt="Logo" style="height: 45px; width: auto; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));">
+                    <span class="brand-text">NEO POKEDEX</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Pokemon" asp-action="Index">DATABASE</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/umutardaayhan" target="_blank">GITHUB</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container main-content mt-4">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="neo-footer pokedex-theme">
+        <div class="container">
+            <p class="footer-text mb-1">
+                PROJECT NEO_POKEDEX v1.2 <br>
+                DESIGNED & CODED BY <a href="https://github.com/umutardaayhan" target="_blank" class="footer-link">Umut Arda Ayhan</a>
+            </p>
+            <small style="font-size: 0.65rem; opacity: 0.8;">
+                Data provided by <a href="https://pokeapi.co/" target="_blank" style="color:#fff; text-decoration:underline;">PokeAPI</a>.
+                Pokémon and Pokémon character names are trademarks of Nintendo.
+            </small>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

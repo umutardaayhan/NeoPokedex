@@ -1,0 +1,403 @@
+﻿@model PokedexMvc.Models.PokemonIndexViewModel
+
+@{
+    ViewData["Title"] = "Neo Pokedex";
+}
+
+<style>
+    .search-wrapper {
+        position: relative;
+        max-width: 600px;
+        margin: 0 auto 40px auto;
+    }
+
+    .neo-input {
+        width: 100%;
+        background: #0f0f0f;
+        border: 2px solid #333;
+        color: #fff;
+        padding: 20px 60px 20px 25px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border-radius: 50px;
+        transition: 0.3s;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+        .neo-input:focus {
+            outline: none;
+            border-color: #ffcb05;
+            box-shadow: 0 0 25px rgba(255, 203, 5, 0.2);
+        }
+
+    .search-icon {
+        position: absolute;
+        right: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5rem;
+        color: #555;
+    }
+
+    .neo-input:focus + .search-icon {
+        color: #ffcb05;
+    }
+
+    .dark-card {
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        overflow: hidden;
+        position: relative;
+    }
+
+        .dark-card:hover {
+            transform: translateY(-7px);
+            border-color: #ffcb05;
+        }
+
+    .poke-img {
+        filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+        transition: 0.3s;
+    }
+
+    .dark-card:hover .poke-img {
+        transform: scale(1.1);
+    }
+
+    .pokemon-id {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-family: 'Press Start 2P';
+        font-size: 0.6rem;
+        color: #555;
+    }
+
+    /* Animasyon */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .filter-bar {
+        background: #151515;
+        border: 1px solid #333;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 30px;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .neo-select {
+        background: #0f0f0f;
+        border: 1px solid #444;
+        color: #ddd;
+        padding: 10px 15px;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+        text-transform: uppercase;
+        flex-grow: 1;
+    }
+
+        .neo-select:focus {
+            outline: none;
+            border-color: #ffcb05;
+        }
+
+    .sort-btn {
+        background: #333;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.2s;
+        text-transform: uppercase;
+        font-family: 'Rajdhani', sans-serif;
+    }
+
+        .sort-btn:hover {
+            background: #ffcb05;
+            color: black;
+        }
+
+    /* YENİ: PAGINATION STİLLERİ */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 40px;
+        flex-wrap: wrap;
+    }
+
+    .page-btn {
+        background: #111;
+        border: 1px solid #333;
+        color: #fff;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: bold;
+        transition: 0.2s;
+        border-radius: 4px;
+    }
+
+        .page-btn:hover {
+            background: #333;
+            color: #ffcb05;
+        }
+
+        .page-btn.active {
+            background: #ffcb05;
+            color: #000;
+            border-color: #ffcb05;
+        }
+
+        .page-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+    @@media (max-width: 768px) {
+        h2 {
+            font-size: 1.5rem !important;
+        }
+
+        .search-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .neo-input {
+            font-size: 1.1rem;
+            padding: 15px 50px 15px 20px;
+        }
+
+        .filter-bar {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        .neo-select, .sort-btn {
+            width: 100%;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .dark-card {
+            padding: 10px !important;
+        }
+
+        .page-btn{
+            padding: 8px 12px;
+        }
+    }
+
+    @@media (max-width: 400px) {
+        .page-btn {
+            padding: 8px 8px;
+        }
+    
+    }
+
+    .type-dot {
+        height: 10px;
+        width: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 3px;
+    }
+</style>
+
+<form method="get" asp-action="Index" id="filterForm">
+
+    <div class="search-wrapper">
+        <input type="text" name="search" value="@Model.SearchTerm" class="neo-input" placeholder="SEARCH POKEMON..." autocomplete="off">
+        <span class="search-icon">🔍</span>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-dark pb-2">
+        <h2 class="text-white mb-0" style="font-family: 'Rajdhani'; font-weight:700;">
+            DATABASE <span style="color:#ffcb05">@Model.TotalRecords RECORDS</span>
+        </h2>
+    </div>
+
+    <div class="filter-bar">
+        <select name="type" class="neo-select" onchange="this.form.submit()">
+            <!option value="all" @(Model.TypeFilter == "all" ? "selected" : "")>ALL TYPES</!option>
+            <!option value="fire" @(Model.TypeFilter == "fire" ? "selected" : "")>FIRE</!option>
+            <!option value="water" @(Model.TypeFilter == "water" ? "selected" : "")>WATER</!option>
+            <!option value="grass" @(Model.TypeFilter == "grass" ? "selected" : "")>GRASS</!option>
+            <!option value="electric" @(Model.TypeFilter == "electric" ? "selected" : "")>ELECTRIC</!option>
+            <!option value="bug" @(Model.TypeFilter == "bug" ? "selected" : "")>BUG</!option>
+            <!option value="poison" @(Model.TypeFilter == "poison" ? "selected" : "")>POISON</!option>
+            <!option value="flying" @(Model.TypeFilter == "flying" ? "selected" : "")>FLYING</!option>
+            <!option value="normal" @(Model.TypeFilter == "normal" ? "selected" : "")>NORMAL</!option>
+            <!option value="psychic" @(Model.TypeFilter == "psychic" ? "selected" : "")>PSYCHIC</!option>
+            <!option value="ground" @(Model.TypeFilter == "ground" ? "selected" : "")>GROUND</!option>
+            <!option value="rock" @(Model.TypeFilter == "rock" ? "selected" : "")>ROCK</!option>
+            <!option value="ghost" @(Model.TypeFilter == "ghost" ? "selected" : "")>GHOST</!option>
+            <!option value="fighting" @(Model.TypeFilter == "fighting" ? "selected" : "")>FIGHTING</!option>
+            <!option value="ice" @(Model.TypeFilter == "ice" ? "selected" : "")>ICE</!option>
+            <!option value="dragon" @(Model.TypeFilter == "dragon" ? "selected" : "")>DRAGON</!option>
+        </select>
+
+        <select name="sort" class="neo-select" onchange="this.form.submit()">
+            <!option value="id" @(Model.SortOrder == "id" ? "selected" : "")>NUMBER (ID)</!option>
+            <!option value="id_desc" @(Model.SortOrder == "id_desc" ? "selected" : "")>NUMBER (DESC)</!option>
+            <!option value="name_asc" @(Model.SortOrder == "name_asc" ? "selected" : "")>NAME (A-Z)</!option>
+            <!option value="name_desc" @(Model.SortOrder == "name_desc" ? "selected" : "")>NAME (Z-A)</!option>
+            <!option value="hp_desc" @(Model.SortOrder == "hp_desc" ? "selected" : "")>HIGHEST HP</!option>
+            <!option value="atk_desc" @(Model.SortOrder == "atk_desc" ? "selected" : "")>HIGHEST ATTACK</!option>
+            <!option value="spd_desc" @(Model.SortOrder == "spd_desc" ? "selected" : "")>HIGHEST SPEED</!option>
+            <!option value="xp_desc" @(Model.SortOrder == "xp_desc" ? "selected" : "")>HIGHEST XP</!option>
+        </select>
+
+        <button type="submit" class="sort-btn">SEARCH / APPLY</button>
+    </div>
+
+</form>
+
+<div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-4">
+    @if (Model.Pokemons.Count == 0)
+    {
+        <div class="col-12 text-center text-muted mt-5">
+            <h5>NO RECORDS FOUND</h5>
+        </div>
+    }
+    else
+    {
+        @foreach (var p in Model.Pokemons)
+        {
+            string idFormatted = p.Id.ToString().PadLeft(3, '0');
+            string typeColor = "#555";
+            string typeName = "";
+
+            if (p.Types.Count > 0)
+            {
+                typeName = p.Types[0].ToUpper();
+                if (typeName == "FIRE") typeColor = "#f00";
+                else if (typeName == "WATER") typeColor = "#00f";
+                else if (typeName == "GRASS") typeColor = "#0f0";
+                else if (typeName == "ELECTRIC") typeColor = "#ff0";
+            }
+
+            <div class="col fade-in">
+                <a asp-controller="Pokemon"
+                   asp-action="Detail"
+                   asp-route-id="@p.Id"
+                   asp-route-page="@Model.CurrentPage"
+                   asp-route-search="@Model.SearchTerm"
+                   asp-route-type="@Model.TypeFilter"
+                   asp-route-sort="@Model.SortOrder"
+                   class="text-decoration-none pokemon-link">
+                    <div class="card h-100 dark-card rounded-3 p-3 text-center">
+                        <span class="pokemon-id">#@idFormatted</span>
+                        <img src="@($"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{p.Id}.png")"
+                             class="card-img-top poke-img mt-3 mb-2"
+                             loading="lazy"
+                             decoding="async"
+                             alt="@p.Name">
+                        <div class="card-body p-0 mt-2">
+                            <h5 class="text-white text-uppercase fw-bold" style="font-size: 0.9rem; letter-spacing:1px;">@p.Name</h5>
+                            <div class="mt-2">
+                                <span class="type-dot" style="background:@typeColor"></span>
+                                <small class="text-secondary" style="font-size:0.7rem">@typeName</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    }
+</div>
+
+@if (Model.TotalPages > 1)
+{
+    <div class="pagination-container">
+        
+        <a href="@Url.Action("Index", new { page = 1, search = Model.SearchTerm, type = Model.TypeFilter, sort = Model.SortOrder })" 
+           class="page-btn @(Model.CurrentPage == 1 ? "disabled" : "")" title="Go to First Page">
+           &lt;&lt; FIRST
+        </a>
+
+        <a href="@Url.Action("Index", new { page = Model.CurrentPage - 1, search = Model.SearchTerm, type = Model.TypeFilter, sort = Model.SortOrder })" 
+           class="page-btn @(Model.CurrentPage == 1 ? "disabled" : "")">
+           &lt; PREV
+        </a>
+
+        @{
+            int startPage = Math.Max(1, Model.CurrentPage - 2);
+            int endPage = Math.Min(Model.TotalPages, Model.CurrentPage + 2);
+            
+        }
+
+        @for (int i = startPage; i <= endPage; i++)
+        {
+            <a href="@Url.Action("Index", new { page = i, search = Model.SearchTerm, type = Model.TypeFilter, sort = Model.SortOrder })" 
+               class="page-btn @(i == Model.CurrentPage ? "active" : "")">
+               @i
+            </a>
+        }
+
+        <a href="@Url.Action("Index", new { page = Model.CurrentPage + 1, search = Model.SearchTerm, type = Model.TypeFilter, sort = Model.SortOrder })" 
+           class="page-btn @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+           NEXT &gt;
+        </a>
+
+        <a href="@Url.Action("Index", new { page = Model.TotalPages, search = Model.SearchTerm, type = Model.TypeFilter, sort = Model.SortOrder })" 
+           class="page-btn @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")" title="Go to Last Page">
+           LAST &gt;&gt;
+        </a>
+
+    </div>
+    
+    <div class="text-center mt-2 text-muted small">
+        Page @Model.CurrentPage of @Model.TotalPages
+    </div>
+}
+
+@section Scripts {
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('.pokemon-link');
+
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (window.stop) {
+                        window.stop();
+                    } else if (document.execCommand) {
+                        document.execCommand("Stop");
+                    }
+
+                    e.currentTarget.style.opacity = "0.5";
+                    e.currentTarget.style.transform = "scale(0.95)";
+
+                    const targetUrl = e.currentTarget.getAttribute('href');
+                    window.location.href = targetUrl;
+                });
+            });
+        });
+    </script>
+}
