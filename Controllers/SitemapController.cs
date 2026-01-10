@@ -39,7 +39,7 @@ namespace PokedexMvc.Controllers
             {
                 sb.AppendLine("<url>");
                 sb.AppendLine($"<loc>{baseUrl}/Pokemon/Detail/{id}</loc>");
-                sb.AppendLine("<changefreq>weekly</changefreq>"); 
+                sb.AppendLine("<changefreq>weekly</changefreq>");
                 sb.AppendLine("<priority>0.8</priority>");
                 sb.AppendLine("</url>");
             }

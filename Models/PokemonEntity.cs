@@ -17,5 +17,6 @@ namespace PokedexMvc.Models
         public int Speed { get; set; }
         public int BaseExperience { get; set; }
         public string? Abilities { get; set; }
+        public string? Moves { get; set; }
     }
 }

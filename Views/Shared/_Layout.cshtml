@@ -4,16 +4,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>@ViewData["Title"]</title>
-    <meta name="description" content="@ViewData["Description"]">
-    <meta name="keywords" content="pokemon, pokedex, database, kanto, stats, analysis, @ViewData["Title"]">
+    <title>@(ViewData["Title"] == null ? "Neo Pokedex | Ultimate Database" : $"{ViewData["Title"]} - Neo Pokedex")</title>
+
+    <meta name="description" content="@(ViewData["Description"] ?? "Explore the ultimate Next-Gen Pokedex built with .NET 9.0. View detailed stats, type matchups, moves, and catch your favorite Pokemons in a modern interface.")">
+    
+    <meta name="keywords" content="pokemon, pokedex, database, stats, moves, evolution, kanto, neo pokedex, asp.net core">
     <meta name="author" content="Umut Arda Ayhan">
 
-    <meta property="og:title" content="@ViewData["Title"]" />
-    <meta property="og:description" content="@ViewData["Description"]" />
-    <meta property="og:image" content="@ViewData["OgImage"]" />
+    <link rel="icon" type="image/webp" href="~/images/logo.webp">
+    <link rel="apple-touch-icon" href="~/images/logo.webp">
+
+    <meta property="og:title" content="@(ViewData["Title"] == null ? "Neo Pokedex" : $"{ViewData["Title"]} - Neo Pokedex")" />
+    <meta property="og:description" content="@(ViewData["Description"] ?? "Discover Pokemon stats, evolutions, and moves with the fastest .NET 9.0 Pokedex.")" />
+    <meta property="og:image" content="@(ViewData["OgImage"] ?? $"{Context.Request.Scheme}://{Context.Request.Host}/images/logo.webp")" />
     <meta property="og:url" content="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path" />
     <meta property="og:type" content="website" />
+
     <meta name="google-site-verification" content="YRpfMWKTdvwxMOkT_9uc_yNRfwz8NlnuvLCGN1NFNMc" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -117,6 +123,13 @@
                             <a class="nav-link" asp-area="" asp-controller="Pokemon" asp-action="Index">DATABASE</a>
                         </li>
                         <li class="nav-item">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="openFavorites(); return false;">
+                                FAVORITES
+                            </a>
+                        </li>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="https://github.com/umutardaayhan" target="_blank">GITHUB</a>
                         </li>
                     </ul>
@@ -134,7 +147,7 @@
     <footer class="neo-footer pokedex-theme">
         <div class="container">
             <p class="footer-text mb-1">
-                PROJECT NEO_POKEDEX v1.4 <br>
+                PROJECT NEO_POKEDEX v1.5 <br>
                 DESIGNED & CODED BY <a href="https://github.com/umutardaayhan" target="_blank" class="footer-link">Umut Arda Ayhan</a>
             </p>
             <small style="font-size: 0.65rem; opacity: 0.8;">
@@ -146,6 +159,60 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global Neo Pokedex Manager (v1.5 Robust)
+        const Neo = {
+            Favorites: {
+                key: 'neo_favorites_ids',
+
+                getList: function () {
+                    const stored = localStorage.getItem(this.key);
+                    if (!stored) return [];
+                    return JSON.parse(stored).map(id => parseInt(id)).filter(id => !isNaN(id));
+                },
+
+                toggle: function (id) {
+                    const numericId = parseInt(id);
+                    let list = this.getList();
+                    const index = list.indexOf(numericId);
+
+                    if (index === -1) {
+                        list.push(numericId);
+                        console.log(`[NEO] ID ${numericId} added favourites.`);
+                    } else {
+                        list.splice(index, 1);
+                        console.log(`[NEO] ID ${numericId} removed favorites.`);
+                    }
+
+                    localStorage.setItem(this.key, JSON.stringify(list));
+                    return index === -1;
+                },
+
+                has: function (id) {
+                    const numericId = parseInt(id);
+                    return this.getList().includes(numericId);
+                },
+
+                count: function () {
+                    return this.getList().length;
+                }
+            }
+        };
+        console.log("✅ Neo System Loaded. Fav Count:", Neo.Favorites.count());
+
+        function openFavorites() {
+            const ids = Neo.Favorites.getList();
+
+            if (ids.length === 0) {
+                alert("You haven't added any Pokemon to your favorites yet! ❤️");
+                return;
+            }
+
+            const queryParam = ids.join(',');
+
+            window.location.href = '/Pokemon/Index?favs=' + queryParam;
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

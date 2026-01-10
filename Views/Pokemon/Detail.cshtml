@@ -89,6 +89,21 @@
         font-size: 0.9rem;
         margin-right: 10px;
         border: 1px solid rgba(255,255,255,0.2);
+        transition: transform 0.2s, filter 0.2s;
+        text-decoration: none !important;
+    }
+
+        .type-badge:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+            cursor: pointer;
+            color: white !important;
+        }
+
+    .matchup-badge:hover {
+        transform: scale(1.1);
+        filter: brightness(1.2);
+        cursor: pointer;
     }
 
     .evo-img {
@@ -136,7 +151,7 @@
         }
     }
 
-    /* --- POPOVER  --- */
+    /* --- POPOVER --- */
     .popover {
         background-color: rgba(20, 20, 20, 0.95);
         border: 1px solid #444;
@@ -164,16 +179,60 @@
     .bs-popover-bottom > .popover-arrow::after {
         border-bottom-color: rgba(20, 20, 20, 0.95);
     }
+
+    .nav-btn {
+        transition: all 0.3s;
+        background: rgba(0,0,0,0.6);
+    }
+
+        .nav-btn:hover {
+            background: #ffcb05 !important;
+            color: #000 !important;
+            transform: scale(1.1);
+            border-color: #ffcb05 !important;
+        }
 </style>
 
 <div class="container detail-container pb-5">
-    <div class="row align-items-center">
+    <div class="row">
 
-        <div class="col-lg-5 col-12 left-col fade-in">
+        <div class="col-lg-5 col-12 left-col fade-in mt-4">
             <div class="text-center">
-                <h1 class="display-4 fw-bold text-white mb-2" style="font-family: 'Rajdhani'; letter-spacing: 2px;">
-                    @Model.Name.ToUpper()
-                </h1>
+
+                <div class="d-flex justify-content-between align-items-center mb-2 px-md-4">
+
+                    @if (Model.PrevId != null)
+                    {
+                        <a href="@Url.Action("Detail", new { id = Model.PrevId, page = Model.ReturnPage, search = Model.ReturnSearch, type = Model.ReturnType, sort = Model.ReturnSort, favs = Model.ReturnFavs })"
+                        class="btn btn-dark border border-secondary text-white rounded-circle d-flex align-items-center justify-content-center shadow-lg nav-btn"
+                           style="width: 45px; height: 45px;"
+                           title="Previous Pokemon">
+                            <span>❮</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <div style="width: 45px;"></div>
+                    }
+
+                    <h1 class="display-4 fw-bold text-white m-0" style="font-family: 'Rajdhani'; letter-spacing: 2px;">
+                        @Model.Name.ToUpper()
+                    </h1>
+
+                    @if (Model.NextId != null)
+                    {
+                        <a href="@Url.Action("Detail", new { id = Model.NextId, page = Model.ReturnPage, search = Model.ReturnSearch, type = Model.ReturnType, sort = Model.ReturnSort, favs = Model.ReturnFavs })"
+                        class="btn btn-dark border border-secondary text-white rounded-circle d-flex align-items-center justify-content-center shadow-lg nav-btn"
+                           style="width: 45px; height: 45px;"
+                           title="Next Pokemon">
+                            <span>❯</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <div style="width: 45px;"></div>
+                    }
+                </div>
                 <div class="d-flex justify-content-center gap-3 mb-4">
                     <button id="btn-cry" class="btn btn-dark border-secondary rounded-circle d-flex align-items-center justify-content-center"
                             style="width: 50px; height: 50px; transition: 0.3s;"
@@ -186,7 +245,14 @@
                             title="Shiny Mode ✨">
                         <span style="font-size: 1.5rem;">✨</span>
                     </button>
+
+                    <button id="btn-fav" class="btn btn-dark border-secondary rounded-circle d-flex align-items-center justify-content-center"
+                            style="width: 50px; height: 50px; transition: 0.3s;"
+                            title="Add/Remove Favorites ❤️">
+                        <span id="fav-icon" style="font-size: 1.5rem; transition: 0.3s;">🤍</span>
+                    </button>
                 </div>
+
                 <p class="text-white mb-4" style="font-family: 'Press Start 2P'; font-size: 0.8rem;">
                     #@Model.Id.ToString().PadLeft(3, '0')
                 </p>
@@ -202,9 +268,12 @@
                         else if (type == "poison") color = "#b97fc9";
                         else if (type == "psychic") color = "#f366b9";
 
-                        <span class="type-badge" style="background-color: @color; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+                        <a href="@Url.Action("Index", "Pokemon", new { type = type })"
+                           class="type-badge"
+                           style="background-color: @color; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);"
+                           title="Show all @char.ToUpper(type[0])@type.Substring(1) Pokemons">
                             @type
-                        </span>
+                        </a>
                     }
                 </div>
 
@@ -226,16 +295,56 @@
                 </h4>
 
                 <div class="row g-3 mb-4">
-                    <div class="col-6">
-                        <div class="data-box">
-                            <span class="data-value">@(Model.Height / 10.0) m</span>
-                            <span class="data-label">HEIGHT</span>
+
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-2 h-100" style="background: rgba(255,255,255,0.05); border: 1px solid #333;">
+                            <small class="text-danger fw-bold mb-2 d-block" style="letter-spacing: 1px; font-size: 0.7rem;">
+                                ⚠️ WEAKNESS (2x / 4x)
+                            </small>
+                            <div class="d-flex flex-wrap gap-2">
+                                @if (Model.Weaknesses != null && Model.Weaknesses.Any())
+                                {
+                                    foreach (var w in Model.Weaknesses)
+                                    {
+                                        <a href="@Url.Action("Index", "Pokemon", new { type = w })"
+                                           class="badge bg-danger bg-opacity-75 border border-danger-subtle text-white text-uppercase text-decoration-none matchup-badge"
+                                           style="font-size: 0.75rem; transition: 0.2s;"
+                                           title="Browse all @char.ToUpper(w[0])@w.Substring(1) Pokemons">
+                                            @w
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">No weakness.</span>
+                                }
+                            </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="data-box">
-                            <span class="data-value">@(Model.Weight / 10.0) kg</span>
-                            <span class="data-label">WEIGHT</span>
+
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-2 h-100" style="background: rgba(255,255,255,0.05); border: 1px solid #333;">
+                            <small class="text-success fw-bold mb-2 d-block" style="letter-spacing: 1px; font-size: 0.7rem;">
+                                🛡️ RESISTANCE (0.5x / 0x)
+                            </small>
+                            <div class="d-flex flex-wrap gap-2">
+                                @if (Model.Resistances != null && Model.Resistances.Any())
+                                {
+                                    foreach (var r in Model.Resistances)
+                                    {
+                                        <a href="@Url.Action("Index", "Pokemon", new { type = r })"
+                                           class="badge bg-success bg-opacity-75 border border-success-subtle text-white text-uppercase text-decoration-none matchup-badge"
+                                           style="font-size: 0.75rem; transition: 0.2s;"
+                                           title="Browse all @char.ToUpper(r[0])@r.Substring(1) Pokemons">
+                                            @r
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">No resistance.</span>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -304,6 +413,30 @@
                     </div>
                 </div>
 
+                <div class="mb-4">
+                    <div class="p-3 rounded-2" style="background: rgba(255,255,255,0.05); border: 1px solid #333;">
+                        <small class="text-light fw-bold mb-2 d-block" style="letter-spacing: 1px; font-size: 0.7rem;">
+                            ⚔️ COMBAT MOVES
+                        </small>
+                        <div class="d-flex flex-wrap gap-2">
+                            @if (Model.Moves != null && Model.Moves.Any())
+                            {
+                                foreach (var move in Model.Moves)
+                                {
+                                    <span class="badge bg-dark border border-secondary text-secondary fw-normal text-capitalize"
+                                          style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                                        @move
+                                    </span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted small">No move data available.</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
                 <div class="p-3 rounded-2" style="background: rgba(255,255,255,0.05); border: 1px solid #333;">
                     <div class="d-flex justify-content-between mb-2">
                         <small class="text-light fw-bold" style="letter-spacing: 1px; font-size: 0.7rem;">BASE EXPERIENCE</small>
@@ -315,8 +448,8 @@
                 </div>
 
                 <div class="mt-4 text-end">
-                    <a href="@Url.Action("Index", new { page = Model.ReturnPage, search = Model.ReturnSearch, type = Model.ReturnType, sort = Model.ReturnSort })"
-                       class="text-decoration-none text-white-50 hover-white"
+                    <a href="@Url.Action("Index", new { page = Model.ReturnPage, search = Model.ReturnSearch, type = Model.ReturnType, sort = Model.ReturnSort, favs = Model.ReturnFavs })"
+                    class="text-decoration-none text-white-50 hover-white"
                        style="font-size: 0.8rem; letter-spacing: 2px;">
                         [ BACK TO LIST ]
                     </a>
@@ -333,36 +466,66 @@
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
             // --- GENERAL VARIABLES ---
-            const currentId = @Model.Id;
-            console.log("Page Loaded. Pokemon ID:", currentId);
+            const currentId = parseInt(@Model.Id);
 
             // ==========================================
-            // 1. CRIES 🔊
+            // 1. FAVORITES SYSTEM ❤️ (LocalStorage)
+            // ==========================================
+            const btnFav = document.getElementById('btn-fav');
+            const favIcon = document.getElementById('fav-icon');
+
+            // Check if button exists and Neo system is loaded
+            if (btnFav && typeof Neo !== 'undefined') {
+
+                // UI Update Function
+                const updateFavUI = (isFav) => {
+                    if (isFav) {
+                        // Active State (Red Heart)
+                        btnFav.classList.remove('btn-dark', 'border-secondary');
+                        btnFav.classList.add('btn-danger', 'border-white');
+                        btnFav.style.boxShadow = "0 0 15px #dc3545";
+                        if (favIcon) favIcon.innerText = "❤️";
+                    } else {
+                        // Inactive State (White Heart)
+                        btnFav.classList.add('btn-dark', 'border-secondary');
+                        btnFav.classList.remove('btn-danger', 'border-white');
+                        btnFav.style.boxShadow = "none";
+                        if (favIcon) favIcon.innerText = "🤍";
+                    }
+                };
+
+                // Initial Load
+                updateFavUI(Neo.Favorites.has(currentId));
+
+                // Click Event
+                btnFav.addEventListener('click', function () {
+                    const newState = Neo.Favorites.toggle(currentId);
+                    updateFavUI(newState);
+
+                    // Pulse Animation
+                    this.style.transform = "scale(1.2)";
+                    setTimeout(() => this.style.transform = "scale(1)", 200);
+                });
+            }
+
+            // ==========================================
+            // 2. CRIES (AUDIO) 🔊
             // ==========================================
             const btnCry = document.getElementById('btn-cry');
             if (btnCry) {
-                // PokeAPI new sound formatte (OGG)
                 const cryUrl = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${currentId}.ogg`;
                 const audio = new Audio(cryUrl);
                 audio.volume = 0.4;
 
                 btnCry.addEventListener('click', () => {
-                    console.log("🔊 The volume button was pressed. URL:", cryUrl);
-
                     btnCry.style.transform = "scale(0.9)";
                     setTimeout(() => btnCry.style.transform = "scale(1)", 150);
-
-                    audio.play().catch(e => {
-                        console.error("Audio playback error (Browser permission may be required):", e);
-                        alert("The sound could not be played. Check browser permissions.");
-                    });
+                    audio.play().catch(e => console.error("Audio Playback Error:", e));
                 });
-            } else {
-                console.error("ERROR: Button with ID 'btn-cry' was not found!");
             }
 
             // ==========================================
-            // 2. SHINY MODE ✨
+            // 3. SHINY MODE ✨
             // ==========================================
             const btnShiny = document.getElementById('btn-shiny');
             const mainImg = document.getElementById('main-img');
@@ -374,33 +537,93 @@
 
                 btnShiny.addEventListener('click', () => {
                     isShiny = !isShiny;
-
                     mainImg.src = isShiny ? shinySrc : normalSrc;
 
                     if (isShiny) {
                         btnShiny.classList.remove('btn-dark');
                         btnShiny.classList.add('btn-warning');
                         btnShiny.style.boxShadow = "0 0 20px #ffcb05";
-                        btnShiny.style.borderColor = "#fff";
                     } else {
                         btnShiny.classList.remove('btn-warning');
                         btnShiny.classList.add('btn-dark');
                         btnShiny.style.boxShadow = "none";
-                        btnShiny.style.borderColor = "#6c757d";
                     }
                 });
-            } else {
-                console.error("ERROR: Element with ID 'btn-shiny' or 'main-img' could not be found!");
             }
 
             // ==========================================
-            // 3. POPOVER 🧠
+            // 4. EVOLUTION CHAIN 🧬
+            // ==========================================
+            const evoContainer = document.getElementById('evo-container');
+            const evoLoading = document.getElementById('evo-loading');
+
+            if (evoContainer) {
+                try {
+                    // Fetch Species Data
+                    const pokemonRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${currentId}/`);
+                    if (!pokemonRes.ok) throw new Error("Pokemon data not found");
+                    const pokemonData = await pokemonRes.json();
+
+                    const speciesRes = await fetch(pokemonData.species.url);
+                    if (!speciesRes.ok) throw new Error("Species not found");
+                    const speciesData = await speciesRes.json();
+
+                    // Fetch Evolution Chain
+                    const evoRes = await fetch(speciesData.evolution_chain.url);
+                    const evoData = await evoRes.json();
+
+                    let evoHtml = '';
+
+                    // Recursive Traversal Function
+                    function traverseChain(node) {
+                    const urlParts = node.species.url.split('/');
+                    const speciesId = urlParts[urlParts.length - 2];
+                    const speciesName = node.species.name;
+
+                    const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${speciesId}.png`;
+
+                    const isActive = speciesId == currentId ? 'border-warning shadow' : 'border-secondary opacity-50';
+
+                    evoHtml += `
+                        <div class="d-flex align-items-center">
+                            <a href="/Pokemon/Detail/${speciesName}" title="${node.species.name}" class="text-decoration-none mx-1">
+                                <img src="${imgUrl}" class="evo-img ${isActive}" alt="${node.species.name}"
+                                     style="width:50px; height:50px; object-fit:contain; border-radius:50%; border:1px solid #555; background:#222;">
+                            </a>
+                        </div>
+                    `;
+
+                    if (node.evolves_to.length > 0) {
+                        evoHtml += `<span class="evo-arrow text-muted mx-1">›</span>`;
+                        node.evolves_to.forEach(childNode => {
+                            traverseChain(childNode);
+                        });
+                    }
+                }
+
+                    traverseChain(evoData.chain);
+
+                    evoLoading.style.display = 'none';
+                    evoContainer.innerHTML = evoHtml;
+                    evoContainer.classList.remove('d-none');
+                    evoContainer.classList.add('flex-wrap');
+
+                } catch (error) {
+                    console.error("Evolution Error:", error);
+                    if (evoLoading) {
+                        evoLoading.innerHTML = '<span class="text-muted small">Evolution data unavailable.</span>';
+                    }
+                }
+            }
+
+            // ==========================================
+            // 5. ABILITIES (POPOVER) 🧠
             // ==========================================
             const abilityCache = {};
             const abilityBadges = document.querySelectorAll('.ability-badge');
 
-            // Enable Popovers
-            const popoverList = [...abilityBadges].map(badge => new bootstrap.Popover(badge));
+            // Initialize Popovers
+            [...abilityBadges].map(badge => new bootstrap.Popover(badge));
 
             abilityBadges.forEach(badge => {
                 badge.addEventListener('mouseenter', async () => {
@@ -414,7 +637,7 @@
 
                     try {
                         const res = await fetch(`https://pokeapi.co/api/v2/ability/${abilityName}`);
-                        if (!res.ok) throw new Error('Veri yok');
+                        if (!res.ok) throw new Error('No data');
                         const data = await res.json();
                         const entry = data.effect_entries.find(e => e.language.name === 'en');
                         const description = entry ? entry.short_effect : "No description available.";
@@ -422,71 +645,10 @@
                         abilityCache[abilityName] = description;
                         popoverInstance.setContent({ '.popover-body': description });
                     } catch (error) {
-                        popoverInstance.setContent({ '.popover-body': 'No information received.' });
+                        popoverInstance.setContent({ '.popover-body': 'Info unavailable.' });
                     }
                 });
             });
-
-            // ==========================================
-            // 4. EVO 🧬
-            // ==========================================
-            const evoContainer = document.getElementById('evo-container');
-            const evoLoading = document.getElementById('evo-loading');
-
-            if(evoContainer) {
-                try {
-                    const pokemonRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${currentId}/`);
-                    if (!pokemonRes.ok) throw new Error("Pokemon data not found");
-                    const pokemonData = await pokemonRes.json();
-
-                    const speciesUrl = pokemonData.species.url;
-                    const speciesRes = await fetch(speciesUrl);
-                    if (!speciesRes.ok) throw new Error("Species not found");
-                    const speciesData = await speciesRes.json();
-
-                    const evoUrl = speciesData.evolution_chain.url;
-                    const evoRes = await fetch(evoUrl);
-                    const evoData = await evoRes.json();
-
-                    let evoHtml = '';
-
-                    function traverseChain(node) {
-                        const urlParts = node.species.url.split('/');
-                        const speciesId = urlParts[urlParts.length - 2];
-                        const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${speciesId}.png`;
-
-                        const isActive = speciesId == currentId ? 'border-warning shadow' : 'border-secondary opacity-50';
-
-                        evoHtml += `
-                            <div class="d-flex align-items-center">
-                                <a href="/Pokemon/Detail/${speciesId}" title="${node.species.name}" class="text-decoration-none mx-1">
-                                    <img src="${imgUrl}" class="evo-img ${isActive}" alt="${node.species.name}"
-                                         style="width:50px; height:50px; object-fit:contain; border-radius:50%; border:1px solid #555; background:#222;">
-                                </a>
-                            </div>
-                        `;
-
-                        if (node.evolves_to.length > 0) {
-                            evoHtml += `<span class="evo-arrow text-muted mx-1">›</span>`;
-                            node.evolves_to.forEach(childNode => {
-                                traverseChain(childNode);
-                            });
-                        }
-                    }
-
-                    traverseChain(evoData.chain);
-
-                    evoLoading.style.display = 'none';
-                    evoContainer.innerHTML = evoHtml;
-                    evoContainer.classList.remove('d-none');
-                    evoContainer.classList.add('flex-wrap');
-
-                } catch (error) {
-                    console.error("Evo Error:", error);
-                    if(evoLoading) {
-                        evoLoading.innerHTML = '<span class="text-muted small">Evolution data could not be found.</span>';
-                    }
-                }
-            }});
+        });
     </script>
 }

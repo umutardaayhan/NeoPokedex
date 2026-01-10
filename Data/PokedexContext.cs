@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokedexMvc.Models;
-using System.Collections.Generic;
 
 namespace PokedexMvc.Data
 {

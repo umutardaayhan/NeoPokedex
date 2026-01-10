@@ -1,4 +1,4 @@
-﻿### Neo Pokedex v1.4 ⚡
+﻿### Neo Pokedex v1.5 ⚡
 
 [![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=flat&logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/9.0)
 [![Platform](https://img.shields.io/badge/Platform-Cross--Platform-lightgrey?style=flat&logo=linux)](https://dotnet.microsoft.com/apps/aspnet)
@@ -18,6 +18,12 @@
 <a name="-english"></a>
 #### 🇬🇧 English
 **Neo Pokedex** is a modern, high-performance Pokedex application built with **ASP.NET Core 9.0**. Designed for Pokemon enthusiasts and developers to demonstrate clean MVC architecture, dynamic data fetching, and efficient caching mechanisms with a "Neo" aesthetic interface.
+
+##### ⚔️ v1.5 Update (Tactical Edition)
+* **Type Matchup Engine:** Automatically calculates and displays **Weaknesses** (2x/4x) and **Resistances** (0.5x/0x) for every Pokemon based on their types.
+* **Combat Moves:** Displays the top 6 combat moves for each Pokemon directly from the database.
+* **Smart Navigation:** Added "Previous" ❮ and "Next" ❯ buttons in detail view for seamless browsing.
+* **Favorites System:** Mark your favorite Pokemons with the ❤️ button and filter them exclusively on the home page.
 
 ##### ☁️ v1.4 Update (Cloud Edition)
 * **Zero-Disk Usage:** Removed local image downloading. The app now streams images directly from GitHub/PokeAPI servers.
@@ -40,7 +46,7 @@
 ##### 🛠️ Installation
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/umutardaayhan/NeoPokedex.git](https://github.com/umutardaayhan/NeoPokedex.git)
+    git clone https://github.com/umutardaayhan/NeoPokedex.git
     cd NeoPokedex
     ```
 2.  **Prerequisites:**
@@ -71,6 +77,12 @@ Then open your browser and navigate to: `http://localhost:5259` or `https://loca
 
 **Neo Pokedex**, **ASP.NET Core 9.0** ile geliştirilmiş modern ve yüksek performanslı bir Pokedex uygulamasıdır. Temiz MVC mimarisi, dinamik veri çekme ve "Neo" estetiğine sahip arayüzü ile hem Pokemon tutkunları hem de geliştiriciler için tasarlanmıştır.
 
+##### ⚔️ v1.5 Güncellemesi (Taktiksel Sürüm)
+* **Tür Analiz Motoru:** Her Pokemon'un türüne göre **Zayıflıklarını** (Weakness) ve **Dirençlerini** (Resistance) otomatik hesaplar ve gösterir.
+* **Savaş Hamleleri:** Her Pokemon için veritabanından çekilen en önemli 6 saldırı hamlesini (Moves) listeler.
+* **Akıllı Navigasyon:** Detay sayfasında Pokemonlar arasında gezmek için "Önceki" ❮ ve "Sonraki" ❯ butonları eklendi.
+* **Favori Sistemi:** Beğendiğiniz Pokemonları ❤️ butonuyla işaretleyebilir ve ana sayfada sadece favorilerinizi filtreleyebilirsiniz.
+
 ##### ☁️ v1.4 Güncellemesi (Cloud Edition)
 * **Sıfır Disk Kullanımı:** Yerel resim indirme işlemi kaldırıldı. Uygulama artık resimleri doğrudan sunucudan çeker.
 * **Hızlı Başlangıç:** Veritabanı kurulumu (Seeder) artık sadece metin verisini işlediği için %90 daha hızlı.
@@ -92,7 +104,7 @@ Then open your browser and navigate to: `http://localhost:5259` or `https://loca
 ##### 🛠️ Kurulum
 1.  **Projeyi bilgisayarınıza klonlayın:**
     ```bash
-    git clone [https://github.com/umutardaayhan/NeoPokedex.git](https://github.com/umutardaayhan/NeoPokedex.git)
+    git clone https://github.com/umutardaayhan/NeoPokedex.git
     cd NeoPokedex
     ```
 2.  **Gereksinimler:**

@@ -1,5 +1,5 @@
-using PokedexMvc.Data;
 using Microsoft.EntityFrameworkCore;
+using PokedexMvc.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

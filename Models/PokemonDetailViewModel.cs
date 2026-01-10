@@ -15,11 +15,18 @@
         public int Speed { get; set; }
         public int BaseExperience { get; set; }
         public string? Abilities { get; set; }
+        public List<string>? Moves { get; set; }
 
+        public string? NextId { get; set; }
+        public string? PrevId { get; set; }
+
+        public List<string> Weaknesses { get; set; } = new List<string>();
+        public List<string> Resistances { get; set; } = new List<string>();
 
         public int ReturnPage { get; set; }
         public string? ReturnSearch { get; set; }
         public string? ReturnType { get; set; }
         public string? ReturnSort { get; set; }
+        public string? ReturnFavs { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model PokedexMvc.Models.PokemonIndexViewModel
 
 @{
-    ViewData["Title"] = "Neo Pokedex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -277,7 +277,20 @@
     </div>
 
 </form>
-
+@if (ViewData["IsFavFilter"] != null && (bool)ViewData["IsFavFilter"] == true)
+{
+    <div class="alert alert-danger d-flex justify-content-between align-items-center mt-3 border-0 shadow"
+         style="background: #8B0000; color: white;">
+        <div>
+            <span style="font-size: 1.2rem; margin-right: 10px;">🤍</span>
+            <span class="fw-bold" style="font-family: 'Rajdhani'; letter-spacing: 1px;">SHOWING YOUR FAVORITE POKEMONS</span>
+            <span class="badge bg-white text-danger ms-2">@Model.TotalRecords found</span>
+        </div>
+        <a href="@Url.Action("Index", "Pokemon")" class="btn btn-sm btn-light fw-bold rounded-pill px-3">
+            CLEAR FILTER ✕
+        </a>
+    </div>
+}
 <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-4">
     @if (Model.Pokemons.Count == 0)
     {
@@ -305,19 +318,22 @@
             <div class="col fade-in">
                 <a asp-controller="Pokemon"
                    asp-action="Detail"
-                   asp-route-id="@p.Id"
+                   asp-route-id="@p.Name.ToLower()" 
                    asp-route-page="@Model.CurrentPage"
                    asp-route-search="@Model.SearchTerm"
                    asp-route-type="@Model.TypeFilter"
                    asp-route-sort="@Model.SortOrder"
+                   asp-route-favs="@Context.Request.Query["favs"]"
                    class="text-decoration-none pokemon-link">
                     <div class="card h-100 dark-card rounded-3 p-3 text-center">
                         <span class="pokemon-id">#@idFormatted</span>
+
                         <img src="@($"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{p.Id}.png")"
                              class="card-img-top poke-img mt-3 mb-2"
                              loading="lazy"
                              decoding="async"
                              alt="@p.Name">
+
                         <div class="card-body p-0 mt-2">
                             <h5 class="text-white text-uppercase fw-bold" style="font-size: 0.9rem; letter-spacing:1px;">@p.Name</h5>
                             <div class="mt-2">
@@ -372,7 +388,7 @@
 
     </div>
     
-    <div class="text-center mt-2 text-muted small">
+    <div class="text-center mt-2 text-secondary small">
         Page @Model.CurrentPage of @Model.TotalPages
     </div>
 }
