@@ -1,134 +1,103 @@
-﻿### Neo Pokedex v1.5 ⚡
+﻿### Neo Pokedex v1.6 ⚡
+
+--------------------------------------------------------------------------------
 
 [![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=flat&logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/9.0)
 [![Platform](https://img.shields.io/badge/Platform-Cross--Platform-lightgrey?style=flat&logo=linux)](https://dotnet.microsoft.com/apps/aspnet)
 [![Database](https://img.shields.io/badge/Database-SQLite-003B57?style=flat&logo=sqlite)](https://www.sqlite.org/)
 
-> 🌐 **Live Demo / Canlı Site:** [https://neopokedex.runasp.net](https://neopokedex.runasp.net)
-
-<div align="center">
-  <h3>
-    <a href="#-english">🇬🇧 English</a> | 
-    <a href="#-türkçe">🇹🇷 Türkçe</a>
-  </h3>
-</div>
-
---------------------------------------------------------------------------------
+> 🌐 **Live Demo / Canlı Site:** : [https://neopokedex.runasp.net]
 
 <a name="-english"></a>
 #### 🇬🇧 English
 **Neo Pokedex** is a modern, high-performance Pokedex application built with **ASP.NET Core 9.0**. Designed for Pokemon enthusiasts and developers to demonstrate clean MVC architecture, dynamic data fetching, and efficient caching mechanisms with a "Neo" aesthetic interface.
 
-##### ⚔️ v1.5 Update (Tactical Edition)
-* **Type Matchup Engine:** Automatically calculates and displays **Weaknesses** (2x/4x) and **Resistances** (0.5x/0x) for every Pokemon based on their types.
-* **Combat Moves:** Displays the top 6 combat moves for each Pokemon directly from the database.
-* **Smart Navigation:** Added "Previous" ❮ and "Next" ❯ buttons in detail view for seamless browsing.
-* **Favorites System:** Mark your favorite Pokemons with the ❤️ button and filter them exclusively on the home page.
+##### 🚀 v1.6 Update (Performance Edition)
+* **Local Asset Caching:** Reverted to local storage for images (`wwwroot/images`) to ensure lightning-fast load times and offline compatibility.
+* **Gen 9 Support:** Database limit extended to cover **1025 Pokemons** (up to Generation 9).
+* **Aggressive Caching:** Implemented 1-year static file caching headers for maximum client-side performance.
 
-##### ☁️ v1.4 Update (Cloud Edition)
-* **Zero-Disk Usage:** Removed local image downloading. The app now streams images directly from GitHub/PokeAPI servers.
-* **Faster Startup:** The database seeding process is now 90% faster as it only syncs text data.
-* **Lightweight:** Significant reduction in project size and storage requirements.
+##### ⚔️ v1.5 Features (Tactical Edition)
+* **Type Matchup Engine:** Automatically calculates **Weaknesses** (2x/4x) and **Resistances** (0.5x/0x) based on types.
+* **Combat Moves:** Displays the top 6 combat moves for each Pokemon.
+* **Smart Navigation:** "Previous" ❮ and "Next" ❯ buttons for seamless browsing.
+* **Favorites System:** Mark favorites with ❤️ and filter them on the home page.
 
-##### 🌟 v1.3 Features
-* **Abilities System:** Now fetches and displays Pokemon abilities. Hover over ability names to see detailed descriptions via popovers.
-* **Interactive Elements:** Toggle **Shiny Mode** artwork ✨ and play Pokemon **Cries/Sounds** 🔊 directly from the detail view.
-* **Enhanced Data:** Auto-seeder now captures detailed ability data along with stats.
+##### 🌟 Core Features
+* **Modern Tech Stack:** .NET 9.0, Entity Framework Core, MVC.
+* **Interactive Elements:** Toggle **Shiny Mode** ✨, play **Cries/Sounds** 🔊, and view Ability details via popovers.
+* **Advanced Filtering:** Filter by Type, Search by Name/ID, Sort by Stats, and Filter by Favorites.
+* **SEO Optimized:** Dynamic `sitemap.xml` and Open Graph tags.
 
-##### 🚀 Core Features
-* **Modern Tech Stack:** Built on .NET 9.0, Entity Framework Core, and MVC Architecture.
-* **Auto-Seeder System:** Automatically fetches, parses, and stores data/images from **PokeAPI** into a local SQLite database upon first run.
-* **Performance:** Implements **IMemoryCache** to serve Pokemon lists instantly without repeated database hits.
-* **Advanced Filtering:** Filter by Type, Search by Name/ID, and Sort by Stats (HP, Attack, Speed, XP).
-* **SEO Optimized:** Dynamic `sitemap.xml` generation and Open Graph (OG) meta tags for social sharing.
-* **Responsive Design:** Mobile-friendly dark UI using Bootstrap and custom CSS.
-
-##### 🛠️ Installation
+##### 🛠️ Installation & First Run
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/umutardaayhan/NeoPokedex.git
     cd NeoPokedex
     ```
-2.  **Prerequisites:**
-    * Ensure you have **.NET SDK 9.0** installed.
-
-3.  **Restore Packages:**
+2.  **Restore Packages:**
     ```bash
     dotnet restore
     ```
+3.  **Run the App:**
+    ```bash
+    dotnet run
+    ```
 
-##### ⚠️ IMPORTANT: First Run & Database
-This application uses a local **SQLite** database. You do not need to download a database file manually.
-1.  **Launch:** When you run the app for the first time, the `DbSeeder` will activate.
-2.  **Wait:** It will connect to PokeAPI, download Pokemon data (including new **Ability** data), and save images locally to `wwwroot/images/pokemons`.
-3.  **Note:** This process might take a few minutes depending on your internet connection. Check the console for progress logs (e.g., `--> [UPDATING] 50 / 2000`).
-
-##### 🚀 Usage
-Run the application via terminal:
-```bash
-dotnet run
-```
-Then open your browser and navigate to: `http://localhost:5259` or `https://localhost:7106`
+##### ⚠️ IMPORTANT: Database Seeding (v1.6 Change)
+Since v1.6 downloads images locally for performance:
+1.  **First Launch:** The app will download **1025 images** and data from PokeAPI.
+2.  **Duration:** This process takes **5-10 minutes** depending on your internet speed.
+3.  **Console Logs:** Watch the terminal for progress (e.g., `✅ 50/1025 Downloaded`).
+4.  **Note:** Do not close the terminal until you see `🎉 ALL OPERATIONS COMPLETED!`. Subsequent runs will be instant.
 
 --------------------------------------------------------------------------------
 
 <a name="-türkçe"></a>
 #### 🇹🇷 Türkçe
+**Neo Pokedex**, **ASP.NET Core 9.0** ile geliştirilmiş modern ve yüksek performanslı bir Pokedex uygulamasıdır. Temiz MVC mimarisi ve "Neo" estetiğine sahip arayüzü ile hem Pokemon tutkunları hem de geliştiriciler için tasarlanmıştır.
 
-**Neo Pokedex**, **ASP.NET Core 9.0** ile geliştirilmiş modern ve yüksek performanslı bir Pokedex uygulamasıdır. Temiz MVC mimarisi, dinamik veri çekme ve "Neo" estetiğine sahip arayüzü ile hem Pokemon tutkunları hem de geliştiriciler için tasarlanmıştır.
+##### 🚀 v1.6 Güncellemesi (Performans Sürümü)
+* **Yerel Varlık Yönetimi:** Sayfa yüklenme hızlarını maksimize etmek için resimler tekrar yerel diske (`wwwroot`) indirilmektedir. İnternet yavaşlasa bile uygulama "ışık hızında" çalışır.
+* **9. Nesil Desteği:** Veritabanı limiti **1025 Pokemon**'a çıkarıldı (Gen 9 dahil).
+* **Statik Önbellek:** Tarayıcı tarafında 1 yıllık önbellek (cache) başlıkları eklendi.
 
-##### ⚔️ v1.5 Güncellemesi (Taktiksel Sürüm)
-* **Tür Analiz Motoru:** Her Pokemon'un türüne göre **Zayıflıklarını** (Weakness) ve **Dirençlerini** (Resistance) otomatik hesaplar ve gösterir.
-* **Savaş Hamleleri:** Her Pokemon için veritabanından çekilen en önemli 6 saldırı hamlesini (Moves) listeler.
-* **Akıllı Navigasyon:** Detay sayfasında Pokemonlar arasında gezmek için "Önceki" ❮ ve "Sonraki" ❯ butonları eklendi.
-* **Favori Sistemi:** Beğendiğiniz Pokemonları ❤️ butonuyla işaretleyebilir ve ana sayfada sadece favorilerinizi filtreleyebilirsiniz.
+##### ⚔️ v1.5 Özellikleri (Taktiksel Sürüm)
+* **Tür Analiz Motoru:** Türlere göre **Zayıflıklar** (Weakness) ve **Dirençler** (Resistance) otomatik hesaplanır.
+* **Savaş Hamleleri:** Her Pokemon için en önemli 6 saldırı hamlesi (Moves) listelenir.
+* **Akıllı Navigasyon:** Detay sayfasında "Önceki" ❮ ve "Sonraki" ❯ butonları.
+* **Favori Sistemi:** Beğendiğiniz Pokemonları ❤️ ile işaretleyip filtreleyebilirsiniz.
 
-##### ☁️ v1.4 Güncellemesi (Cloud Edition)
-* **Sıfır Disk Kullanımı:** Yerel resim indirme işlemi kaldırıldı. Uygulama artık resimleri doğrudan sunucudan çeker.
-* **Hızlı Başlangıç:** Veritabanı kurulumu (Seeder) artık sadece metin verisini işlediği için %90 daha hızlı.
-* **Hafifletilmiş Yapı:** Proje boyutunda ve depolama gereksiniminde ciddi düşüş.
+##### 🌟 Temel Özellikler
+* **Modern Teknoloji:** .NET 9.0, Entity Framework Core ve MVC.
+* **Etkileşim:** **Shiny Mod** ✨ geçişi, **Ses (Cry)** 🔊 çalma ve Yetenek açıklamaları.
+* **Gelişmiş Filtreleme:** Tür, İsim, ID, İstatistik Sıralaması ve Favori filtreleme.
+* **SEO Uyumlu:** Dinamik `sitemap.xml` ve sosyal medya etiketleri.
 
-##### 🌟 v1.3 Yenilikleri
-* **Yetenek (Ability) Sistemi:** Artık Pokemon yeteneklerini veritabanına çekip listeliyor. Yetenek isimlerinin üzerine gelindiğinde detaylı açıklamaları gösterir.
-* **Etkileşimli Özellikler:** Detay sayfasında **Shiny Mod** ✨ resimlerine geçiş yapabilir ve Pokemon'un orijinal **Sesini (Cry)** 🔊 dinleyebilirsiniz.
-* **Zenginleştirilmiş Veri:** Otomatik veri çekici (Seeder) artık istatistiklerin yanında yetenek verilerini de işler.
-
-##### 🚀 Temel Özellikler
-* **Modern Teknoloji:** .NET 9.0, Entity Framework Core ve MVC Mimarisi üzerine inşa edilmiştir.
-* **Otomatik Veri Sistemi (Seeder):** İlk çalıştırıldığında PokeAPI üzerinden verileri ve resimleri otomatik olarak çeker ve yerel SQLite veritabanına kaydeder.
-* **Performans:** **IMemoryCache** kullanarak Pokemon listelerini veritabanını yormadan anında listeler.
-* **Gelişmiş Filtreleme:** Türe göre filtreleme, İsim/ID ile arama ve İstatistiklere (Can, Saldırı, Hız, XP) göre sıralama özellikleri.
-* **SEO Uyumlu:** Dinamik `sitemap.xml` oluşturma ve sosyal medya paylaşımları için Open Graph (OG) etiketleri.
-* **Duyarlı Tasarım:** Bootstrap ve özel CSS ile hazırlanmış mobil uyumlu karanlık arayüz.
-
-##### 🛠️ Kurulum
-1.  **Projeyi bilgisayarınıza klonlayın:**
+##### 🛠️ Kurulum ve İlk Çalıştırma
+1.  **Projeyi klonlayın:**
     ```bash
     git clone https://github.com/umutardaayhan/NeoPokedex.git
     cd NeoPokedex
     ```
-2.  **Gereksinimler:**
-    * Bilgisayarınızda **.NET SDK 9.0** yüklü olduğundan emin olun.
-
-3.  **Paketleri Yükleyin:**
+2.  **Paketleri Yükleyin:**
     ```bash
     dotnet restore
     ```
+3.  **Başlatın:**
+    ```bash
+    dotnet run
+    ```
 
-##### ⚠️ Önemli: İlk Çalıştırma ve Veritabanı
-Bu uygulama yerel bir **SQLite** veritabanı kullanır. Herhangi bir SQL sunucusu kurmanıza gerek yoktur.
-1.  **Başlat:** Uygulamayı ilk kez çalıştırdığınızda `DbSeeder` devreye girer.
-2.  **Bekle:** Uygulama PokeAPI'ye bağlanır, verileri çeker (Yetenekler dahil) ve resimleri `wwwroot/images/pokemons` klasörüne kaydeder.
-3.  **Not:** Bu işlem internet hızınıza bağlı olarak birkaç dakika sürebilir. İlerlemeyi terminalden takip edebilirsiniz (Örn: `--> [GÜNCELLENİYOR] 50 / 2000`).
-
-##### 🚀 Kullanım
-Uygulamayı başlatmak için terminalde şu komutu çalıştırın:
-```bash
-dotnet run
-```
-Ardından tarayıcınızda şu adrese gidin: `http://localhost:5259` veya `https://localhost:7106`
+##### ⚠️ Önemli: Veritabanı Kurulumu (v1.6 Değişikliği)
+v1.6 sürümü resimleri yerel diske indirdiği için:
+1.  **İlk Açılış:** Uygulama PokeAPI'den **1025 Pokemon** verisini ve resmini indirir.
+2.  **Süre:** Bu işlem internet hızınıza bağlı olarak **5-10 dakika** sürebilir.
+3.  **Takip:** İlerlemeyi terminalden izleyin (Örn: `✅ 50/1025 Downloaded`).
+4.  **Not:** `🎉 ALL OPERATIONS COMPLETED!` yazısını görene kadar bekleyin. Sonraki açılışlar anında gerçekleşecektir.
 
 --------------------------------------------------------------------------------
 
-### 📄 License / Lisans
-This project is licensed under the MIT License. Data provided by PokeAPI. Pokémon and Pokémon character names are trademarks of Nintendo.
+#### 📄 License
+This project is licensed under the MIT License.
+Data provided by [PokeAPI](https://pokeapi.co/). Pokémon characters are trademarks of Nintendo.

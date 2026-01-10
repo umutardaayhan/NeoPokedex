@@ -328,10 +328,9 @@
                     <div class="card h-100 dark-card rounded-3 p-3 text-center">
                         <span class="pokemon-id">#@idFormatted</span>
 
-                        <img src="@($"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{p.Id}.png")"
+                        <img src="~/images/pokemons/@(p.Id).png"
                              class="card-img-top poke-img mt-3 mb-2"
                              loading="lazy"
-                             decoding="async"
                              alt="@p.Name">
 
                         <div class="card-body p-0 mt-2">

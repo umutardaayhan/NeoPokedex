@@ -135,7 +135,6 @@ namespace PokedexMvc.Controllers
             }
             else
             {
-                // Eğer filtreleme yapıldıysa başlık değişsin
                 ViewData["Title"] = "Search Results";
                 ViewData["Description"] = $"Showing results for {(string.IsNullOrEmpty(search) ? "Pokemon" : search)}.";
             }

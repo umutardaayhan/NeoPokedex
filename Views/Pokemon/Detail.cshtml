@@ -28,12 +28,18 @@
     }
 
     .data-box {
-        background: #0f0f0f;
+        background: rgba(255, 255, 255, 0.05);
         border: 1px solid #333;
         padding: 15px;
         text-align: center;
         border-radius: 8px;
+        transition: 0.3s;
     }
+
+        .data-box:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #555;
+        }
 
     .data-value {
         display: block;
@@ -45,8 +51,9 @@
 
     .data-label {
         font-size: 0.7rem;
-        color: #666;
+        color: #888;
         letter-spacing: 2px;
+        font-weight: bold;
     }
 
     .stat-row {
@@ -204,7 +211,7 @@
                     @if (Model.PrevId != null)
                     {
                         <a href="@Url.Action("Detail", new { id = Model.PrevId, page = Model.ReturnPage, search = Model.ReturnSearch, type = Model.ReturnType, sort = Model.ReturnSort, favs = Model.ReturnFavs })"
-                        class="btn btn-dark border border-secondary text-white rounded-circle d-flex align-items-center justify-content-center shadow-lg nav-btn"
+                           class="btn btn-dark border border-secondary text-white rounded-circle d-flex align-items-center justify-content-center shadow-lg nav-btn"
                            style="width: 45px; height: 45px;"
                            title="Previous Pokemon">
                             <span>❮</span>
@@ -222,7 +229,7 @@
                     @if (Model.NextId != null)
                     {
                         <a href="@Url.Action("Detail", new { id = Model.NextId, page = Model.ReturnPage, search = Model.ReturnSearch, type = Model.ReturnType, sort = Model.ReturnSort, favs = Model.ReturnFavs })"
-                        class="btn btn-dark border border-secondary text-white rounded-circle d-flex align-items-center justify-content-center shadow-lg nav-btn"
+                           class="btn btn-dark border border-secondary text-white rounded-circle d-flex align-items-center justify-content-center shadow-lg nav-btn"
                            style="width: 45px; height: 45px;"
                            title="Next Pokemon">
                             <span>❯</span>
@@ -278,12 +285,10 @@
                 </div>
 
                 <img id="main-img"
-                     src="@($"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{Model.Id}.png")"
+                     src="~/images/pokemons/@(Model.Id).png"
                      class="img-fluid poke-big-img"
                      style="width: 80%;"
-                     alt="@Model.Name"
-                     loading="eager"
-                     fetchpriority="high">
+                     alt="@Model.Name">
             </div>
         </div>
 
@@ -294,6 +299,20 @@
                     > ANALYSIS REPORT
                 </h4>
 
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="data-box">
+                            <span class="data-value">@(Model.Height / 10.0) M</span>
+                            <span class="data-label">HEIGHT</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="data-box">
+                            <span class="data-value">@(Model.Weight / 10.0) KG</span>
+                            <span class="data-label">WEIGHT</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="row g-3 mb-4">
 
                     <div class="col-md-6">
@@ -449,7 +468,7 @@
 
                 <div class="mt-4 text-end">
                     <a href="@Url.Action("Index", new { page = Model.ReturnPage, search = Model.ReturnSearch, type = Model.ReturnType, sort = Model.ReturnSort, favs = Model.ReturnFavs })"
-                    class="text-decoration-none text-white-50 hover-white"
+                       class="text-decoration-none text-white-50 hover-white"
                        style="font-size: 0.8rem; letter-spacing: 2px;">
                         [ BACK TO LIST ]
                     </a>
@@ -532,9 +551,8 @@
             let isShiny = false;
 
             if (btnShiny && mainImg) {
-                const normalSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${currentId}.png`;
-                const shinySrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${currentId}.png`;
-
+            const normalSrc = `/images/pokemons/${currentId}.png`;
+            const shinySrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${currentId}.png`;
                 btnShiny.addEventListener('click', () => {
                     isShiny = !isShiny;
                     mainImg.src = isShiny ? shinySrc : normalSrc;
@@ -576,30 +594,29 @@
 
                     // Recursive Traversal Function
                     function traverseChain(node) {
-                    const urlParts = node.species.url.split('/');
-                    const speciesId = urlParts[urlParts.length - 2];
-                    const speciesName = node.species.name;
+                        const urlParts = node.species.url.split('/');
+                        const speciesId = urlParts[urlParts.length - 2];
+                        const speciesName = node.species.name;
 
-                    const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${speciesId}.png`;
-
+                    const imgUrl = `/images/pokemons/${speciesId}.png`;
                     const isActive = speciesId == currentId ? 'border-warning shadow' : 'border-secondary opacity-50';
 
-                    evoHtml += `
-                        <div class="d-flex align-items-center">
-                            <a href="/Pokemon/Detail/${speciesName}" title="${node.species.name}" class="text-decoration-none mx-1">
-                                <img src="${imgUrl}" class="evo-img ${isActive}" alt="${node.species.name}"
-                                     style="width:50px; height:50px; object-fit:contain; border-radius:50%; border:1px solid #555; background:#222;">
-                            </a>
-                        </div>
-                    `;
+                        evoHtml += `
+                            <div class="d-flex align-items-center">
+                                <a href="/Pokemon/Detail/${speciesName}" title="${node.species.name}" class="text-decoration-none mx-1">
+                                    <img src="${imgUrl}" class="evo-img ${isActive}" alt="${node.species.name}"
+                                         style="width:50px; height:50px; object-fit:contain; border-radius:50%; border:1px solid #555; background:#222;">
+                                </a>
+                            </div>
+                        `;
 
-                    if (node.evolves_to.length > 0) {
-                        evoHtml += `<span class="evo-arrow text-muted mx-1">›</span>`;
-                        node.evolves_to.forEach(childNode => {
-                            traverseChain(childNode);
-                        });
+                        if (node.evolves_to.length > 0) {
+                            evoHtml += `<span class="evo-arrow text-muted mx-1">›</span>`;
+                            node.evolves_to.forEach(childNode => {
+                                traverseChain(childNode);
+                            });
+                        }
                     }
-                }
 
                     traverseChain(evoData.chain);
 
