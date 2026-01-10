@@ -36,8 +36,6 @@ app.UseStatusCodePagesWithReExecute("/Pokemon/Index");
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseAuthorization();
-
 app.MapStaticAssets();
 
 app.MapControllerRoute(

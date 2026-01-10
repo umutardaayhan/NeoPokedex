@@ -14,6 +14,8 @@
         public int Defense { get; set; }
         public int Speed { get; set; }
         public int BaseExperience { get; set; }
+        public string? Abilities { get; set; }
+
 
         public int ReturnPage { get; set; }
         public string? ReturnSearch { get; set; }
