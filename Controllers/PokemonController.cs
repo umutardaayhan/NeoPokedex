@@ -109,6 +109,7 @@ namespace PokedexMvc.Controllers
                 BaseExperience = p.BaseExperience,
                 Height = p.Height,
                 Weight = p.Weight,
+                Abilities = p.Abilities,
                 ReturnPage = page,
                 ReturnSearch = search,
                 ReturnType = type,

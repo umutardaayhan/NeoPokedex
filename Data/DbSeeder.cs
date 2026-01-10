@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using PokedexMvc.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace PokedexMvc.Data
 {
@@ -14,7 +15,7 @@ namespace PokedexMvc.Data
 
                 if (context.Pokemons.Any()) return;
 
-                Console.WriteLine("--> GÜNCELLEME BAŞLIYOR (Boy/Kilo Ekleniyor)...");
+                Console.WriteLine("--> UPDATE STARTS");
 
                 string webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pokemons");
                 if (!Directory.Exists(webRootPath)) Directory.CreateDirectory(webRootPath);
@@ -56,14 +57,17 @@ namespace PokedexMvc.Data
 
                                 var typeList = data["types"].Select(t => t["type"]["name"].ToString()).ToList();
 
+                                var abilityList = data["abilities"].Select(a => a["ability"]["name"].ToString()).ToList();
+
                                 return new PokemonEntity
                                 {
                                     Id = id,
-                                    Name = data["name"].ToString(),
+                                    Name = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(data["name"].ToString()),
                                     ImageUrl = dbImagePath,
-                                    Types = string.Join(",", typeList),
+                                    Types = string.Join(", ", typeList),
 
-                                    // YENİ VERİLER
+                                    Abilities = string.Join(", ", abilityList),
+
                                     Height = (int)data["height"],
                                     Weight = (int)data["weight"],
 
@@ -74,7 +78,10 @@ namespace PokedexMvc.Data
                                     BaseExperience = data["base_experience"] != null ? (int)data["base_experience"] : 0
                                 };
                             }
-                            catch { return null; }
+                            catch
+                            {
+                                return null;
+                            }
                         }));
                     }
 
@@ -86,10 +93,10 @@ namespace PokedexMvc.Data
                     context.ChangeTracker.Clear();
 
                     processed += chunk.Length;
-                    Console.WriteLine($"--> [GÜNCELLENİYOR] {processed} / {total} (Resimler: Mevcut olanlar atlanıyor)");
+                    Console.WriteLine($"--> [UPDATING] {processed} / {total}");
                 }
 
-                Console.WriteLine("--> TAMAMLANDI! Veritabanı güncel.");
+                Console.WriteLine("--> DONE! Database is up to date.");
             }
         }
     }
