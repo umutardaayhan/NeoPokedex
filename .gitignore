@@ -13,4 +13,4 @@ publish/
 
 *.log
 
-*.png
+wwwroot/images/pokemons/
