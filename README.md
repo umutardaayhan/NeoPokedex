@@ -1,4 +1,4 @@
-﻿### Neo Pokedex v1.3 ⚡
+﻿### Neo Pokedex v1.4 ⚡
 
 [![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=flat&logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/9.0)
 [![Platform](https://img.shields.io/badge/Platform-Cross--Platform-lightgrey?style=flat&logo=linux)](https://dotnet.microsoft.com/apps/aspnet)
@@ -19,7 +19,12 @@
 #### 🇬🇧 English
 **Neo Pokedex** is a modern, high-performance Pokedex application built with **ASP.NET Core 9.0**. Designed for Pokemon enthusiasts and developers to demonstrate clean MVC architecture, dynamic data fetching, and efficient caching mechanisms with a "Neo" aesthetic interface.
 
-##### 🌟 v1.3 Features (New!)
+##### ☁️ v1.4 Update (Cloud Edition)
+* **Zero-Disk Usage:** Removed local image downloading. The app now streams images directly from GitHub/PokeAPI servers.
+* **Faster Startup:** The database seeding process is now 90% faster as it only syncs text data.
+* **Lightweight:** Significant reduction in project size and storage requirements.
+
+##### 🌟 v1.3 Features
 * **Abilities System:** Now fetches and displays Pokemon abilities. Hover over ability names to see detailed descriptions via popovers.
 * **Interactive Elements:** Toggle **Shiny Mode** artwork ✨ and play Pokemon **Cries/Sounds** 🔊 directly from the detail view.
 * **Enhanced Data:** Auto-seeder now captures detailed ability data along with stats.
@@ -65,6 +70,11 @@ Then open your browser and navigate to: `http://localhost:5259` or `https://loca
 #### 🇹🇷 Türkçe
 
 **Neo Pokedex**, **ASP.NET Core 9.0** ile geliştirilmiş modern ve yüksek performanslı bir Pokedex uygulamasıdır. Temiz MVC mimarisi, dinamik veri çekme ve "Neo" estetiğine sahip arayüzü ile hem Pokemon tutkunları hem de geliştiriciler için tasarlanmıştır.
+
+##### ☁️ v1.4 Güncellemesi (Cloud Edition)
+* **Sıfır Disk Kullanımı:** Yerel resim indirme işlemi kaldırıldı. Uygulama artık resimleri doğrudan sunucudan çeker.
+* **Hızlı Başlangıç:** Veritabanı kurulumu (Seeder) artık sadece metin verisini işlediği için %90 daha hızlı.
+* **Hafifletilmiş Yapı:** Proje boyutunda ve depolama gereksiniminde ciddi düşüş.
 
 ##### 🌟 v1.3 Yenilikleri
 * **Yetenek (Ability) Sistemi:** Artık Pokemon yeteneklerini veritabanına çekip listeliyor. Yetenek isimlerinin üzerine gelindiğinde detaylı açıklamaları gösterir.

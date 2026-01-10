@@ -15,10 +15,7 @@ namespace PokedexMvc.Data
 
                 if (context.Pokemons.Any()) return;
 
-                Console.WriteLine("--> UPDATE STARTS");
-
-                string webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pokemons");
-                if (!Directory.Exists(webRootPath)) Directory.CreateDirectory(webRootPath);
+                Console.WriteLine("--> DATA PULLING...");
 
                 var httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };
 
@@ -43,34 +40,20 @@ namespace PokedexMvc.Data
                                 var response = await httpClient.GetStringAsync(detailUrl);
                                 var data = JObject.Parse(response);
                                 int id = (int)data["id"];
-
-                                string localFileName = $"{id}.png";
-                                string localFilePath = Path.Combine(webRootPath, localFileName);
-                                string dbImagePath = $"/images/pokemons/{localFileName}";
-
-                                if (!File.Exists(localFilePath))
-                                {
-                                    string remoteImgUrl = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{id}.png";
-                                    var imgBytes = await httpClient.GetByteArrayAsync(remoteImgUrl);
-                                    await File.WriteAllBytesAsync(localFilePath, imgBytes);
-                                }
+                                string remoteImgUrl = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{id}.png";
 
                                 var typeList = data["types"].Select(t => t["type"]["name"].ToString()).ToList();
-
                                 var abilityList = data["abilities"].Select(a => a["ability"]["name"].ToString()).ToList();
 
                                 return new PokemonEntity
                                 {
                                     Id = id,
                                     Name = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(data["name"].ToString()),
-                                    ImageUrl = dbImagePath,
+                                    ImageUrl = remoteImgUrl,
                                     Types = string.Join(", ", typeList),
-
                                     Abilities = string.Join(", ", abilityList),
-
                                     Height = (int)data["height"],
                                     Weight = (int)data["weight"],
-
                                     Hp = (int)data["stats"][0]["base_stat"],
                                     Attack = (int)data["stats"][1]["base_stat"],
                                     Defense = (int)data["stats"][2]["base_stat"],
@@ -93,10 +76,10 @@ namespace PokedexMvc.Data
                     context.ChangeTracker.Clear();
 
                     processed += chunk.Length;
-                    Console.WriteLine($"--> [UPDATING] {processed} / {total}");
+                    Console.WriteLine($"--> [Updating] {processed} / {total}");
                 }
 
-                Console.WriteLine("--> DONE! Database is up to date.");
+                Console.WriteLine("--> COMPLETED! Database is up to date.");
             }
         }
     }
